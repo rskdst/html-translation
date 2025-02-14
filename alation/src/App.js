@@ -1,13 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
-import {useState} from "react";
+import {useState, useEffect, useRef} from "react";
+import {keys} from "@material-ui/core/styles/createBreakpoints";
 
 function App() {
+
+    const animatedRef = useRef()
+    const startTimeRef = useRef(null);
 
     const [productsSubmenuShow, setProductsSubmenuShow] = useState(false);
     const [solutionsSubmenuShow, setSolutionsSubmenuShow] = useState(false);
     const [learnSubmenuShow, setLearnSubmenuShow] = useState(false);
     const [companySubmenuShow, setCompanySubmenuShow] = useState(false);
+    const [collapse, setCollapse] = useState(0);
+    const [collapseImg, setCollapseImg] = useState(0);
+    const [animatedWidth, setAnimatedWidth] = useState('0%');
+    const [animatedOpacity, setAnimatedOpacity] = useState(0);
+    const [animatedScale, setAnimatedScale] = useState(0.8);
 
 
     const products_items = [
@@ -266,6 +275,132 @@ function App() {
             href: 'https://www.alation.com/alation-trust-center/',
         }
     ]
+
+    const collapse_items = [
+        {
+            key: 1,
+            height: '126px',
+            title: '满怀信心地构建 AI 模型',
+            richText: '可信的 AI 于可信的数据。Alation 的 AI 治理框架确保数据质量、透明度和合规性。记录见解、跟踪沿袭，并在团队之间协作，以实现合乎道德、合规的人工智能。',
+            linkText: '构建可信的 AI',
+            imgLink: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&w=3840&q=75'
+        },
+        {
+            key: 2,
+            height: '106px',
+            title: '实现数据治理',
+            richText: '通过数据治理推动业务成果。将合规指导融入工作流程，支持协作和创新，同时降低风险。使每个人都能凭借数据做出决策。',
+            linkText: '实现数据治理',
+            imgLink: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F5p0gURZbdabIFV6Vy2Viw4%2Ff483103e4236c688709f8394e4833fa0%2FEnable_data_governancev2.png&w=3840&q=75'
+        },
+        {
+            key: 3,
+            height: '126px',
+            title: '创建一个值得信赖的数据产品市场',
+            richText: '通过一个用户友好型的、按类别组织的市场，让团队能够即时访问可靠的数据产品。快速找到适合您需求的准确、高质量的数据，以加快决策速度。',
+            linkText: '构建一个市场',
+            imgLink: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F63q409jJJsBL0adHP8rntg%2Fc61bcd4b8a091b54ca42a525f358a43f%2FData-Products-Marketplacev3.png&w=3840&q=75'
+        },
+        {
+            key: 4,
+            height: '128px',
+            title: '做出更快的决策',
+            richText: '使每个人都能够做出数据驱动的决策。将数据引入到诸如 Slack、Tableau、Excel 和 Google Sheets 等常用工具中。通过将元数据集成到日常工作流程中来提高生产力。',
+            linkText: '实现自助式分析',
+            imgLink: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2FyO6BRJXMt8ZJ4CotySKtP%2F7b20e803d88d7e42b982291256b15dc6%2FSelf-service-analyticsv3.png&w=3840&q=75'
+        },
+        {
+            key: 5,
+            height: '126px',
+            title: '使您的数据现代化',
+            richText: '让您的云转型无缝衔接。借助 Alation，制定一个成功的数据现代化计划，打破传统的数据孤岛。优先考虑重要事项，自信地进行迁移，同时保障质量和治理。',
+            linkText: '自信地迁移',
+            imgLink: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F1Y13lJW95KQfetDshrw5dm%2Fa8718fef2617899c77e0950422043c6d%2FModernize-data-ecosystemv3.png&w=3840&q=75'
+        },
+
+    ]
+
+    const discover_items = [
+        {
+            key: 1,
+            videoId: 'TF8w9VNZskCE9wuUdO5tm',
+            cover: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&w=3840&q=75',
+            video: 'https:////videos.ctfassets.net/7p3vnbbznfiw/2TF8w9VNZskCE9wuUdO5tm/fdf0925bff951cdd0b43300e41481a39/Sallie-Mae-Customer-Video.mp4',
+            desc: 'Alation 帮助我们确信我们的数据是可信的并且适合其用途。'
+        },
+        {
+            key: 2,
+            videoId: 'b9mAfipLtYBW8eS4tNhgr',
+            cover: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F3L6AzMAlNsxwG5ogJwoDw1%2F5efb4079a5f495eab956fc764be84158%2FGXS-Bank-Case-Study-Youtube-Cover-1280x720-v3__1_.png&w=3840&q=75',
+            video: 'https:////videos.ctfassets.net/7p3vnbbznfiw/3b9mAfipLtYBW8eS4tNhgr/da30e462594f5e2535ed58eb4284740b/GXS-Customer-Video.mp4',
+            desc: 'Alation 为利益相关者提供了平台和能力，使他们能够搜索到他们所需的数据……'
+        },
+        {
+            key: 3,
+            videoId: 'RZ5MIEO2vhFOqa3xyMwxw',
+            cover: 'https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7JhKPLLh4LWhh9SfBx9aE5%2Faac7bb75a6d42f67761508ed9a9edfb9%2FVattenfall-Case-Study-Youtube-Cover-1280x720-v2__1_.jpg&w=3840&q=75',
+            video: 'https:////videos.ctfassets.net/7p3vnbbznfiw/6RZ5MIEO2vhFOqa3xyMwxw/b37fc56e3050b7d4d98d323c20bff357/Vattenfall-Customer-Video.mp4',
+            desc: '[借助 Alation] 我们将以用户为中心和高质量数据确定为促进我们的数据文化和创造业务价值的关键推动因素。'
+        },
+    ]
+
+    const animate_func = (totalDuration, func, end) => {
+        startTimeRef.current = performance.now();
+        const animate = (timestamp) => {
+            const elapsedTime = timestamp - startTimeRef.current;
+            const progress = Math.min(elapsedTime / totalDuration, 1);
+
+            if (progress < end) {
+                func(progress);
+                requestAnimationFrame(animate);
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }
+
+
+    useEffect(() => {
+        startTimeRef.current = performance.now();
+        const animate = (timestamp) => {
+            const elapsedTime = timestamp - startTimeRef.current;
+            const totalDuration = 10000;
+            const progress = Math.min(elapsedTime / totalDuration, 1);
+            const newWidth = `${progress * 100}%`;
+
+            if (progress < 1) {
+                setAnimatedWidth(newWidth);
+                requestAnimationFrame(animate);
+            } else {
+                if (collapse === 4) {
+                    setCollapse(0)
+                    setCollapseImg(0)
+                } else {
+                    setCollapse(collapse + 1)
+                    setCollapseImg(collapseImg + 1)
+                }
+            }
+        };
+
+        requestAnimationFrame(animate);
+
+    }, [collapse]);
+
+    useEffect(() => {
+        animate_func(500, setAnimatedOpacity, 1)
+    }, [collapse]);
+
+    useEffect(() => {
+        animate_func(1200, setAnimatedScale, 0.9)
+
+    }, [collapseImg]);
+
+    useEffect(() => {
+        return () => {
+            setAnimatedWidth('0%')
+        };
+    }, [collapse]);
+
 
     return (
         <div className="App">
@@ -760,6 +895,232 @@ function App() {
                                 src="https:////videos.ctfassets.net/7p3vnbbznfiw/7c0FIFqvqaSHCShiyn9tfa/050ce79b5771e54ad3740a6292f7ebb7/Compressed_Home_Page_Hero.mp4"
                                 type="video/mp4"/>
                         </video>
+                    </div>
+                </section>
+                <section className='section__nIFoJ'>
+                    <div className='accordionWrapper__BeL8n'>
+                        <h2 className="accordionTitle__O5vYK">将您的元数据转化为每个团队的宝贵资源</h2>
+                        <div className="accordionDescription">
+                            <div className="richText"><p style={{paddingBottom: 0}}><span>《财富》100 强企业中有 40% 依靠 Alation 来实现其数据和人工智能计划的商业价值。构建可信的数据产品，扩展自助式分析，管理您的数据和人工智能资产，并实现数据现代化。</span>
+                            </p></div>
+                        </div>
+                        <div className='itemWrapper__MCaSa'>
+                            <div className='itemWrapper__items__CQZu5'>
+                                {
+                                    collapse_items.map((item, index) => {
+                                        return <div key={item.key}>
+                                            <div id="3GQoWkBSsXTo8M4p29FmTs-0"
+                                                 className="elementWrapper__DTk6j"
+                                                 onClick={() => {
+                                                     setCollapseImg(index)
+                                                     if (index === collapse) {
+                                                         setCollapse(-1)
+                                                     } else {
+                                                         setCollapse(index)
+                                                     }
+
+                                                 }}
+                                            >
+                                                <div className="element__67Z2P">
+                                                    <div className="header__GeehG"><h4
+                                                        className="header__title__VJMAp">{item.title}</h4>
+                                                        <div
+                                                            className="header__arrow">
+                                                            {collapse !== index ?
+                                                                <img alt="down arrow" loading="lazy" width="24"
+                                                                     height="24"
+                                                                     decoding="async" data-nimg="1"
+                                                                     style={{color: 'transparent'}}
+                                                                     src="https://www.alation.com/themes2024/down-arrow-slate-gray-30.svg"/> :
+                                                                <img alt="up arrow" loading="lazy" width="24"
+                                                                     height="24"
+                                                                     decoding="async" data-nimg="1"
+                                                                     style={{color: 'transparent'}}
+                                                                     src="https://www.alation.com/themes2024/up-arrow-button-primary-orange.svg"/>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className="elementDetailsWrapper__9jTEj"
+                                                        style={{
+                                                            height: index === collapse ? item.height : 0,
+
+                                                        }}>
+                                                        <div className="elementDetailsWrapper__details__hhPhT">
+                                                            <div className="styles_richText__IQPtE"><p
+                                                                style={{paddingBottom: 0}}>
+                                                                <span>{item.richText}</span>
+                                                            </p></div>
+                                                        </div>
+                                                        <div className="elementDetailsWrapper__textCTA__eQppF">
+                                                            <div
+                                                                className="linkWrapper__NDyq4">
+                                                                <a href="https://www.alation.com/solutions/artificial-intelligence/">
+                                                                    <div
+                                                                        className="linkTextArrowWrapper__IdI7c">
+                                                                        <span>{item.linkText}</span>
+                                                                        <div
+                                                                            className="rightArrow__VFSTQ"></div>
+                                                                    </div>
+                                                                </a></div>
+                                                        </div>
+                                                        {/*<div className="elementDetailsWrapper__mediaWrapper__cRBtF">*/}
+                                                        {/*    <img*/}
+                                                        {/*        alt="Build AI models with confidence and break down data silos"*/}
+                                                        {/*        loading="lazy" decoding="async" data-nimg="fill"*/}
+                                                        {/*        style={{*/}
+                                                        {/*            position: 'absolute',*/}
+                                                        {/*            height: '100%',*/}
+                                                        {/*            width: '100%',*/}
+                                                        {/*            left: 0,*/}
+                                                        {/*            top: 0,*/}
+                                                        {/*            right: 0,*/}
+                                                        {/*            bottom: 0,*/}
+                                                        {/*            objectFit: 'cover',*/}
+                                                        {/*            color: 'transparent'*/}
+                                                        {/*        }}*/}
+                                                        {/*        sizes="1230"*/}
+                                                        {/*        // srcSet="/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=16&amp;q=75 16w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=32&amp;q=75 32w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=48&amp;q=75 48w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=64&amp;q=75 64w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=96&amp;q=75 96w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=128&amp;q=75 128w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=256&amp;q=75 256w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=384&amp;q=75 384w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=640&amp;q=75 640w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=750&amp;q=75 750w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=828&amp;q=75 828w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1080&amp;q=75 1080w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1200&amp;q=75 1200w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1920&amp;q=75 1920w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=2048&amp;q=75 2048w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=3840&amp;q=75 3840w"*/}
+                                                        {/*        src="https://www.alation.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=3840&amp;q=75"/>*/}
+                                                        {/*</div>*/}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="lineBreakWrapper__qjncw">
+                                                <div className="lineBreakWrapper__lineBreak__OCr42"></div>
+                                                <div
+                                                    ref={animatedRef}
+                                                    className="lineBreakWrapper__lineBreakAnimated__ltgGd"
+                                                    style={{
+                                                        width: animatedWidth,
+                                                        border: index === collapse ? '2px solid #e3682a' : "none"
+                                                    }}></div>
+                                            </div>
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            <div className="itemWrapper__images__J5Yvy">
+                                {
+                                    collapse_items.map((item, index) => {
+                                        return <div key={item.key}>
+                                            <div
+                                                className="itemWrapper__mediaWrapper__JObFe"
+                                                style={{display: index === collapseImg ? "block" : "none"}}
+                                            >
+                                                <div
+                                                    className="itemWrapper__mediaWrapper__overlay__etW4r"
+                                                ></div>
+                                                {/*style={{left: '50%', right: '0%'}}></div>*/}
+                                                <img alt="Build AI models with confidence and break down data silos"
+                                                     loading="lazy" decoding="async" data-nimg="fill"
+                                                     className="itemWrapper__mediaWrapper__image__nj5mC"
+                                                     style={{
+                                                         position: 'absolute',
+                                                         height: '100%',
+                                                         width: '100%',
+                                                         inset: 0,
+                                                         color: 'transparent',
+                                                         opacity: index === collapseImg ? animatedOpacity : 0,
+                                                         transform: `scale(${animatedScale}, ${animatedScale})`,
+                                                         // transform: 'translate3d(0px,0px,0px)',
+                                                         translate: 'none',
+                                                         rotate: 'none',
+                                                         scale: 'none',
+                                                         // transition: 'opacity 1s ease'
+                                                     }}
+                                                     sizes="1230"
+                                                    // srcSet="/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=16&amp;q=75 16w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=32&amp;q=75 32w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=48&amp;q=75 48w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=64&amp;q=75 64w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=96&amp;q=75 96w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=128&amp;q=75 128w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=256&amp;q=75 256w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=384&amp;q=75 384w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=640&amp;q=75 640w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=750&amp;q=75 750w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=828&amp;q=75 828w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1080&amp;q=75 1080w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1200&amp;q=75 1200w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=1920&amp;q=75 1920w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=2048&amp;q=75 2048w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F4Hxvb8bXjOYnr6XiBQYbpC%2Fbe357c4d2c4af67909468f5b2f64666b%2FBuild-AI-Modelsv2.png&amp;w=3840&amp;q=75 3840w"
+                                                     src={item.imgLink}/>
+                                            </div>
+                                        </div>
+                                    })
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section className='section__hkTtd'>
+                    <div className='bentoBoxWrapper__1gpnZ'>
+                        <div className="bentoBoxWrapper__header__Fah6R"><h2
+                            className="bentoBoxWrapper__header__title___RZNr">探究为什么《财富》100 强中 40% 的企业选择并信任 Alation</h2></div>
+                        <div className='boxRow__VKmFX'>
+                            {
+                                discover_items.map((item, index) => {
+                                    return <div className="boxWrapper__lE8tA" key={item.key}>
+                                        <div className="boxWrapper__section__XrwAR">
+                                            <div className="videoWrapper__Ltqxy">
+                                                <div className="videoWrapper__ii9rv">
+                                                    <img
+                                                        id={`video_image_${index}`}
+                                                        alt="video cover image" loading="lazy" decoding="async"
+                                                        data-nimg="fill"
+                                                        className="show__nWBAW" sizes="1280px"
+                                                        // srcSet="/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=16&amp;q=75 16w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=32&amp;q=75 32w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=48&amp;q=75 48w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=64&amp;q=75 64w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=96&amp;q=75 96w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=128&amp;q=75 128w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=256&amp;q=75 256w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=384&amp;q=75 384w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=640&amp;q=75 640w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=750&amp;q=75 750w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=828&amp;q=75 828w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=1080&amp;q=75 1080w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=1200&amp;q=75 1200w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=1920&amp;q=75 1920w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=2048&amp;q=75 2048w, /_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F7p3vnbbznfiw%2F7aGO8eVwYF8iPaAbQynLXV%2Ff3b8f17957781d8d468077cab7fafadc%2FSallie-Mae-Case-Study-Youtube-Cover-v3-1280x720.png&amp;w=3840&amp;q=75 3840w"
+                                                        src={item.cover}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            height: '100%',
+                                                            width: '100%',
+                                                            inset: '0px',
+                                                            objectFit: 'cover',
+                                                            color: 'transparent'
+                                                        }}/>
+                                                    <div
+                                                        className="playButtonWrapper__TXN4B"
+                                                        id={`video_play_${index}`}
+                                                        onClick={() => {
+                                                            const videoElement = document.querySelector(`#${item.videoId}`);
+                                                            const imgElement = document.querySelector(`#video_image_${index}`);
+                                                            const playElement = document.querySelector(`#video_play_${index}`);
+                                                            if (videoElement) {
+                                                                videoElement.style.visibility = 'visible'
+                                                                imgElement.style.visibility = 'hidden'
+                                                                playElement.style.visibility = 'hidden'
+                                                                videoElement.play();
+                                                            }
+                                                        }}
+                                                    >
+                                                        <img alt="play-button" loading="lazy"
+                                                             width="16" height="13"
+                                                             decoding="async" data-nimg="1"
+                                                             src="https://www.alation.com/_next/static/media/play.9b3a0a51.svg"
+                                                             style={{color: 'transparent'}}
+
+                                                        /></div>
+                                                    <video
+                                                        id={item.videoId}
+                                                        className="mp4Video__a7Ked" controls
+                                                        playsInline
+                                                    >
+                                                        <source
+                                                            src={item.video}
+                                                            type="video/mp4"/>
+                                                    </video>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="description__z3ZvN">
+                                                <div className="richText__IQPtE"><p style={{paddingBottom: '0px'}}>
+                                                    <span>“{item.desc}</span><span>”</span>
+                                                </p></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                })
+                            }
+                        </div>
+                        <div className="bentoBoxWrapper__ctaWrapper___9zvm"><a
+                            className="buttonAnchorWrapper__UwNgs"
+                            href="https://www.alation.com/customers/" target="_self">
+                            <button
+                                className="button__Qiyid">
+                                <div className="labelWrapper__KP57a">查看所有客户案例</div>
+                            </button>
+                        </a></div>
                     </div>
 
                 </section>
